@@ -47,7 +47,7 @@ class to_csv:
     def header(self):
         data = self.data.get(self.file)
         head = {}
-        for i in range(len(self.data)):
+        for i in range(len(data)):
             head = head | data[i].keys()
         return list(head)
 
