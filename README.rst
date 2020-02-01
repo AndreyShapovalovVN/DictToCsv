@@ -10,6 +10,8 @@
 ----------
 ::
 
+    from DictToCSV.Dict2CSV import * 
+    
     xParce(<dict>, 'root')
     t = to_csv()
     t._delimiter = ';'
