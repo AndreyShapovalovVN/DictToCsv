@@ -10,7 +10,8 @@
 ----------
 ::
 
-    t = to_csv(xParce(<dict>))
+    xParce(<dict>, 'root')
+    t = to_csv()
     t._delimiter = ';'
     t._codepage = 'utf8'
 

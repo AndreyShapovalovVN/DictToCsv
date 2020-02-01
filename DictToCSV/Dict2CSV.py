@@ -40,8 +40,8 @@ class to_csv:
     _delimiter = ';'
     _codepage = 'utf8'
 
-    def __init__(self, data):
-        self.data = data
+    def __init__(self, data=None):
+        self.data = data or DATA_REQUEST
 
     @property
     def header(self):
@@ -56,11 +56,10 @@ class to_csv:
             self.save_one(k, path=path)
 
     def save_one(self, file, path='./', header=None):
-
         if self.data.get(file):
             self.file = file
             out_csv = csv.DictWriter(
-                open(os.path.join(path, '.'.join((file, '.csv'))),
+                open(os.path.join(path, '.'.join((file, 'csv'))),
                      'w',
                      encoding=self._codepage),
                 fieldnames=header or self.header,
