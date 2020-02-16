@@ -1,6 +1,7 @@
 import csv
 import os
 from uuid import uuid4
+from collections import OrderedDict
 
 
 class to_csv:
@@ -16,7 +17,9 @@ class to_csv:
         head = {}
         for i in range(len(data)):
             head = head | data[i].keys()
-        return list(head)
+        header = list(head)
+        header.sort()
+        return header
 
     def clear(self):
         self.data = {}
@@ -27,17 +30,37 @@ class to_csv:
         self.clear()
 
     def save_one(self, file, path='./', header=None):
-        if self.data.get(file):
-            self.file = file
-            out_csv = csv.DictWriter(
-                open(os.path.join(path, '.'.join((file, 'csv'))),
-                     'w',
-                     encoding=self._codepage),
-                fieldnames=header or self.header,
-                delimiter=self._delimiter
-            )
-            out_csv.writeheader()
-            out_csv.writerows(self.data[file])
+        if not self.data.get(file):
+            raise NameError("'file' - not found keys from data")
+
+        self.file = file
+        out_csv = csv.DictWriter(
+            open(os.path.join(path, '.'.join((file, 'csv'))),
+                 'w',
+                 encoding=self._codepage),
+            fieldnames=header or self.header,
+            delimiter=self._delimiter
+        )
+        out_csv.writeheader()
+        out_csv.writerows(self.data[file])
+
+    def xSave_one(self, file, path='./', header=None):
+        if not isinstance(header, OrderedDict):
+            raise TypeError("'header' not collections.OrderedDict")
+        if not self.data.get(file):
+            raise NameError("'file' - not found keys from data")
+
+        csv_header = list(header.keys())
+        out_csv = csv.DictWriter(
+            open(os.path.join(path, '.'.join((file, 'csv'))),
+                 'w', encoding=self._codepage),
+            fieldnames=csv_header,
+            delimiter=self._delimiter
+        )
+        out_csv.writeheader()
+
+        for line in self.data.get(file):
+            out_csv.writerow({i: line.get(header[i]) for i in csv_header})
 
     def xParce(self, data, parent, id=uuid4().hex, p_id=None):
         response = {'id': id, 'p_id': p_id}
